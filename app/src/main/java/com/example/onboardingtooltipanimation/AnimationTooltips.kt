@@ -16,16 +16,20 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.delay
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun AnimtionTooltips(
+
     modifier: Modifier = Modifier,
     tooltipsList: List<AnimationObject>,
-    delay: Long = 2000,
+    delayPhase1: Long = 2000,
+    delayPhase2: Long = 1000,
+    delayPhase3: Long = 1000,
+    delayPhase4: Long = 500,
+    delayPhase5: Long = 500,
     state: (Int) -> Unit,
     bigCircleRadiusAnimation: FiniteAnimationSpec<Dp> = spring(
         dampingRatio = Spring.DampingRatioMediumBouncy,
@@ -35,7 +39,6 @@ fun AnimtionTooltips(
         dampingRatio = Spring.DampingRatioNoBouncy,
         stiffness = Spring.StiffnessMediumLow
     ),
-    disappearingDelay: Long = 500,
     smallCircleRadiusAnimation: FiniteAnimationSpec<Dp> = spring(
         dampingRatio = Spring.DampingRatioMediumBouncy,
         stiffness = Spring.StiffnessLow
@@ -49,19 +52,16 @@ fun AnimtionTooltips(
         stiffness = Spring.StiffnessLow
     ),
     changingPositionAnim: FiniteAnimationSpec<Offset> = spring(
-        dampingRatio = Spring.DampingRatioMediumBouncy,
-        stiffness = Spring.StiffnessLow
-    ),
-    changingObjectSizeAnim: FiniteAnimationSpec<IntSize> = spring(
-        dampingRatio = Spring.DampingRatioMediumBouncy,
+        dampingRatio = Spring.DampingRatioNoBouncy,
         stiffness = Spring.StiffnessLow
     ),
     indication: Indication = LocalIndication.current,
+    bigCircleColorBeforeDisappearing: Color? = null
 ) {
     var currentState by remember { mutableStateOf(0) }
     state(currentState)
 
-    var transition by mutableStateOf(updateTransition(currentState, label = ""))
+    val transition by mutableStateOf(updateTransition(currentState, label = ""))
 
 
 //state -1 - znikanie tekstu i ikony wraz z małym kołem
@@ -73,12 +73,6 @@ fun AnimtionTooltips(
 //    currentState -1 - zniknięcie tekstu i ikony wraz z małym kołem
 //    currentState -2 - zmiana koloru dużego koła i zniknięcie dużego koła
 
-//    var bigCircleRadius: Dp by mutableStateOf(0.dp)
-//    var bigCircleColor: Color by mutableStateOf(tooltipsList.first().bigCircleColor)
-//    var smallCircleRadius: Dp by mutableStateOf(0.dp)
-//    var smallCircleColor: Color by mutableStateOf(tooltipsList.first().smallCircleColor)
-//    var centerPosition: Offset = tooltipsList.first().centerPosition
-//    var objectSize: IntSize = IntSize.Zero
 
     var showContent by remember { mutableStateOf(false) }
 
@@ -91,7 +85,8 @@ fun AnimtionTooltips(
     val bigCircleColor = getBigCircleColorByTransition(
         animationObjectList = tooltipsList,
         transition = transition,
-        bigCircleColorAnimation = bigCircleColorAnimation
+        bigCircleColorAnimation = bigCircleColorAnimation,
+        bigCircleColorBeforeDisappearing = bigCircleColorBeforeDisappearing
     )
 
     val smallCircleRadius = getSecondCircleRadiusByTransition(
@@ -118,52 +113,70 @@ fun AnimtionTooltips(
         offsetAnimation = changingPositionAnim
     )
 
-//    val iconOffset = getOffsetByTransition(
-//        animationObjectList = tooltipsList,
-//        transition = transition,
-//        offsetAnimation = changingPositionAnim
-//    )
-
-    val objectSize = getIntSizeByTransition(
+    val descriptionOffset = getDescriptionOffsetByTransition(
         animationObjectList = tooltipsList,
         transition = transition,
-        intSizeAnim = changingObjectSizeAnim
+        offsetAnimation = changingPositionAnim
     )
-
-
 
     if (currentState == 0) {
         LaunchedEffect(
             key1 = currentState,
             block = {
-                delay(disappearingDelay)
+                delay(delayPhase1)
                 currentState += 1
             }
         )
     }
-    if (currentState < 0) {
+    if (currentState == 1) {
         LaunchedEffect(
             key1 = currentState,
             block = {
-                delay(500)
+                delay(delayPhase2)
+                currentState += 1
+            }
+        )
+    }
+
+    if (currentState == -1) {
+        LaunchedEffect(
+            key1 = currentState,
+            block = {
+                delay(delayPhase3)
+                currentState -= 1
+            }
+        )
+    }
+    if (currentState == -2) {
+        LaunchedEffect(
+            key1 = currentState,
+            block = {
+                delay(delayPhase4)
+                currentState -= 1
+            }
+        )
+    }
+    if (currentState == -3) {
+        LaunchedEffect(
+            key1 = currentState,
+            block = {
+                delay(delayPhase5)
                 currentState -= 1
             }
         )
     }
 
-
     Box(
         modifier = modifier
     ) {
         if (tooltipsList.isNotEmpty()) {
-            showContent = transition.targetState >= 1
+            showContent = transition.targetState >= 2
 
             DrawFirstCircle(
                 centerPosition = circleOffset,
                 radius = bigCircleRadius,
                 color = bigCircleColor
             )
-
 
             Crossfade(targetState = showContent) { showContent ->
                 if (showContent) {
@@ -176,19 +189,19 @@ fun AnimtionTooltips(
                     val iconOffsetY = with(LocalDensity.current) { iconOffset.y.toDp() }
                     Box(modifier = Modifier.offset(iconOffsetX, iconOffsetY)) {
                         Crossfade(targetState = transition.targetState) {
-                            if (it > 0 && it <= tooltipsList.size) {
-                                tooltipsList[it - 1].objectToShow()
+                            if (it > 1 && it <= tooltipsList.size+1) {
+                                tooltipsList[it - 2].objectToShow()
                             } else if (it< 0) {
                                 tooltipsList.last().objectToShow()
                             }
                         }
                     }
-                    val descriptionOffsetX = with(LocalDensity.current) { iconOffset.x.toDp() }
-                    val descriptionOffsetY = with(LocalDensity.current) { iconOffset.y.toDp() }
-                    Box(modifier = Modifier.offset(iconOffsetX, iconOffsetY)) {
+                    val descriptionOffsetX = with(LocalDensity.current) { descriptionOffset.x.toDp() }
+                    val descriptionOffsetY = with(LocalDensity.current) { descriptionOffset.y.toDp() }
+                    Box(modifier = Modifier.offset(descriptionOffsetX, descriptionOffsetY)) {
                         Crossfade(targetState = transition.targetState) {
-                            if (it > 0 && it <= tooltipsList.size) {
-                                tooltipsList[it - 1].composeDescription()
+                            if (it > 1 && it <= tooltipsList.size+1) {
+                                tooltipsList[it - 2].composeDescription()
                             } else if (it< 0) {
                                 tooltipsList.last().composeDescription
                             }
@@ -205,9 +218,9 @@ fun AnimtionTooltips(
             .fillMaxSize()
             .clickable(
                 onClick = {
-                    if (currentState == tooltipsList.size) {
+                    if (currentState == tooltipsList.size+1) {
                         currentState = -1
-                    } else if (currentState >= 0 && currentState < tooltipsList.size) {
+                    } else if (currentState >= 0 && currentState < tooltipsList.size+1) {
                         currentState += 1
                     } else if (currentState < 0) {
                         currentState -= 1
@@ -268,9 +281,11 @@ fun getFirstCircleRadiusByTransition(
     ) {
         if (it == 0) {
             0.dp
-        } else if (it > 0 && it <= animationObjectList.size) {
-            animationObjectList[it - 1].bigCircleRadius
-        } else if (it <= -2) {
+        } else if (it == 1){
+            animationObjectList.first().bigCircleRadius
+        }else if (it > 1) {
+            animationObjectList[it - 2].bigCircleRadius
+        } else if (it <= -3) {
             0.dp
         } else {
             animationObjectList.last().bigCircleRadius
@@ -278,32 +293,6 @@ fun getFirstCircleRadiusByTransition(
     }
     return value
 }
-
-//@Composable
-//fun getValueByTransition(
-//    typeConverter: TwoWayConverter<Any, AnimationVector1D>,
-//    animationObjectList: List<AnimationObject>,
-//    transition: Transition<Int>,
-//    bigCircleRadiusAnimation: FiniteAnimationSpec<Any>
-//): Any {
-//    val value by transition.animateValue(
-//        typeConverter = typeConverter,
-//        transitionSpec = {        bigCircleRadiusAnimation    },
-//        label = "bigCircleRadius",
-//    )
-//    {
-//        if (it == 0) {
-//            0.dp
-//        } else if (it > 0 && it <= animationObjectList.size) {
-//            animationObjectList[it - 1].bigCircleRadius
-//        } else if (it <= -2) {
-//            0.dp
-//        } else {
-//            animationObjectList.last().bigCircleRadius
-//        }
-//    }
-//    return value
-//}
 
 
 @Composable
@@ -317,10 +306,10 @@ fun getSecondCircleRadiusByTransition(
             smallCircleRadiusAnimation
         }, label = ""
     ) {
-        if (it == 0) {
+        if (it == 0 || it == 1) {
             0.dp
-        } else if (it > 0 && it <= animationObjectList.size) {
-            animationObjectList[it - 1].smallCircleRadius
+        } else if (it > 1) {
+            animationObjectList[it - 2].smallCircleRadius
         } else {
             animationObjectList.last().smallCircleRadius
         }
@@ -332,23 +321,25 @@ fun getSecondCircleRadiusByTransition(
 fun getBigCircleColorByTransition(
     animationObjectList: List<AnimationObject>,
     transition: Transition<Int>,
-    bigCircleColorAnimation: FiniteAnimationSpec<Color>
+    bigCircleColorAnimation: FiniteAnimationSpec<Color>,
+    bigCircleColorBeforeDisappearing: Color?
 ): Color {
-
-    val value by transition.animateColor(
-        transitionSpec = {
-            bigCircleColorAnimation
-        }, label = ""
-    ) {
-        if (it == 0) {
-            animationObjectList.first().bigCircleColor
-        } else if (it > 0 && it <= animationObjectList.size) {
-            animationObjectList[it - 1].bigCircleColor
-        } else {
-            animationObjectList.last().bigCircleColor
+        val value by transition.animateColor(
+            transitionSpec = {
+                bigCircleColorAnimation
+            }, label = ""
+        ) {
+            if (it == 0 || it == 1) {
+                animationObjectList.first().bigCircleColor
+            } else if (it > 1) {
+                animationObjectList[it - 2].bigCircleColor
+            } else if(it== -1) {
+                animationObjectList.last().bigCircleColor
+            }else{
+                bigCircleColorBeforeDisappearing ?: animationObjectList.last().bigCircleColor
+            }
         }
-    }
-    return value
+        return value
 }
 
 @Composable
@@ -363,10 +354,10 @@ fun getSmallCircleColorByTransition(
             smallCircleColorAnimation
         }, label = ""
     ) {
-        if (it == 0) {
+        if (it == 0 || it == 1) {
             animationObjectList.first().smallCircleColor
-        } else if (it > 0 && it <= animationObjectList.size) {
-            animationObjectList[it - 1].smallCircleColor
+        } else if (it > 2) {
+            animationObjectList[it - 2].smallCircleColor
         } else {
             animationObjectList.last().smallCircleColor
         }
@@ -386,10 +377,10 @@ fun getCircleOffsetByTransition(
         }, label = "bigCircleRadius"
     ) {
 
-        val animObject: AnimationObject = if (it == 0) {
+        val animObject: AnimationObject = if (it == 0 || it == 1) {
             animationObjectList.first()
-        } else if (it > 0 && it <= animationObjectList.size) {
-            animationObjectList[it - 1]
+        } else if (it > 1 ) {
+            animationObjectList[it - 2]
         } else {
             animationObjectList.last()
         }
@@ -411,12 +402,12 @@ fun getIconOffsetByTransition(
     val value by transition.animateOffset(
         transitionSpec = {
             offsetAnimation
-        }, label = "bigCircleRadius"
+        }, label = ""
     ) {
-        if (it == 0) {
+        if (it == 0 || it == 1) {
             animationObjectList.first().objectOffset
-        } else if (it > 0 && it <= animationObjectList.size) {
-            animationObjectList[it - 1].objectOffset
+        } else if (it > 1) {
+            animationObjectList[it - 2].objectOffset
         } else {
             animationObjectList.last().objectOffset
         }
@@ -425,23 +416,22 @@ fun getIconOffsetByTransition(
 }
 
 @Composable
-fun getIntSizeByTransition(
+fun getDescriptionOffsetByTransition(
     animationObjectList: List<AnimationObject>,
     transition: Transition<Int>,
-    intSizeAnim: FiniteAnimationSpec<IntSize>
-): IntSize {
-
-    val value by transition.animateIntSize(
+    offsetAnimation: FiniteAnimationSpec<Offset>
+): Offset {
+    val value by transition.animateOffset(
         transitionSpec = {
-            intSizeAnim
-        }, label = "bigCircleRadius"
+            offsetAnimation
+        }, label = ""
     ) {
-        if (it == 0) {
-            animationObjectList.first().objectSize
-        } else if (it > 0 && it <= animationObjectList.size) {
-            animationObjectList[it - 1].objectSize
+        if (it == 0 || it == 1) {
+            animationObjectList.first().composeDescriptionOffset
+        } else if (it > 1 ) {
+            animationObjectList[it - 2].composeDescriptionOffset
         } else {
-            animationObjectList.last().objectSize
+            animationObjectList.last().composeDescriptionOffset
         }
     }
     return value

@@ -37,9 +37,9 @@ fun ExampleView() {
         listOf(
             //PersonIcon
             AnimationObject(
-                bigCircleRadius = 400.dp,
+                bigCircleRadius = 300.dp,
                 bigCircleColor = firstCircleColor,
-                smallCircleRadius = 100.dp,
+                smallCircleRadius = 50.dp,
                 smallCircleColor = Color.White,
                 objectToShow = { PersonIcon(color = color2) },
                 objectOffset = Offset(
@@ -56,9 +56,9 @@ fun ExampleView() {
                             fontWeight = FontWeight.W500
                         )
                         Text(
-                            text = "This icon is used to activate the user menu",
+                            text = "This icon is used to \nactivate the user menu",
                             style = MaterialTheme.typography.subtitle1,
-                            color = colorResource(id = R.color.purple_500)
+                            color = Color.White
                         )
                     }
                 },
@@ -71,9 +71,9 @@ fun ExampleView() {
             ),
             //SearchingIcon
             AnimationObject(
-                bigCircleRadius = 300.dp,
+                bigCircleRadius = 400.dp,
                 bigCircleColor = color4,
-                smallCircleRadius = 100.dp,
+                smallCircleRadius = 50.dp,
                 smallCircleColor = Color.White,
                 objectToShow = { SearchIcon(color = iconAnimationColor) },
                 objectOffset = searchIconPosition,
@@ -87,9 +87,9 @@ fun ExampleView() {
                             fontWeight = FontWeight.W500
                         )
                         Text(
-                            text = "This icon is for searching other people",
+                            text = "This icon is for searching \nother people",
                             style = MaterialTheme.typography.subtitle1,
-                            color = colorResource(id = R.color.purple_500)
+                            color = Color.White
                         )
                     }
                 },
@@ -199,13 +199,14 @@ fun ExampleView() {
 
         var state by remember { mutableStateOf(0) }
 
-        if (state > -3) {
+        if (state > -4) {
             AnimtionTooltips(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(0.3f)),
                 tooltipsList = animationTooltips,
-                state = { state = it }
+                state = { state = it },
+                bigCircleColorBeforeDisappearing = color1
             )
         }
     }
