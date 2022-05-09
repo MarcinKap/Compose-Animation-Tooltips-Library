@@ -17,7 +17,4 @@ data class AnimationObject(
     val objectSize: IntSize,
     val composeDescription: @Composable () -> Unit,
     val composeDescriptionOffset: Offset = Offset.Zero,
-    val damping: Float,
-    val stiffing: Float
-
 )

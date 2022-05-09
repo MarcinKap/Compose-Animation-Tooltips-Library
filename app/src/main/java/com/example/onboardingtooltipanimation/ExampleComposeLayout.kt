@@ -1,6 +1,5 @@
 package com.example.onboardingtooltipanimation
 
-import androidx.compose.animation.core.Spring
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -12,7 +11,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.positionInRoot
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntSize
@@ -26,6 +24,18 @@ fun ExampleView() {
     var personIconIntSize by remember { mutableStateOf(IntSize.Zero) }
     var searchIconPosition by remember { mutableStateOf(Offset.Zero) }
     var searchIconSize by remember { mutableStateOf(IntSize.Zero) }
+    var informationIconPosition by remember { mutableStateOf(Offset.Zero) }
+    var informationIconSize by remember { mutableStateOf(IntSize.Zero) }
+    var customTextFieldPosition by remember { mutableStateOf(Offset.Zero) }
+    var customTextFieldSize by remember { mutableStateOf(IntSize.Zero) }
+    var emojiIconPosition by remember { mutableStateOf(Offset.Zero) }
+    var emojiIconSize by remember { mutableStateOf(IntSize.Zero) }
+    var emailIconPosition by remember { mutableStateOf(Offset.Zero) }
+    var emailIconSize by remember { mutableStateOf(IntSize.Zero) }
+    var photoIconPosition by remember { mutableStateOf(Offset.Zero) }
+    var photoIconSize by remember { mutableStateOf(IntSize.Zero) }
+    var localizationIconPosition by remember { mutableStateOf(Offset.Zero) }
+    var localizationIconSize by remember { mutableStateOf(IntSize.Zero) }
 
     val color1 = Color(0xff15a8a6)
     val color2 = Color(0xffefaf23)
@@ -65,9 +75,7 @@ fun ExampleView() {
                 composeDescriptionOffset = Offset(
                     personIconPosition.x.plus(personIconIntSize.width.times(2)),
                     personIconPosition.y.plus(personIconIntSize.height.times(2)),
-                ),
-                damping = Spring.DampingRatioLowBouncy,
-                stiffing = Spring.StiffnessLow
+                )
             ),
             //SearchingIcon
             AnimationObject(
@@ -96,9 +104,182 @@ fun ExampleView() {
                 composeDescriptionOffset = Offset(
                     personIconPosition.x.plus(personIconIntSize.width.times(2)),
                     personIconPosition.y.plus(personIconIntSize.height.times(2)),
-                ),
-                damping = Spring.DampingRatioLowBouncy,
-                stiffing = Spring.StiffnessLow
+                )
+            ),
+            //InformationIcon
+            AnimationObject(
+                bigCircleRadius = 400.dp,
+                bigCircleColor = color4,
+                smallCircleRadius = 50.dp,
+                smallCircleColor = Color.White,
+                objectToShow = { InfoIcon(color = iconAnimationColor) },
+                objectOffset = informationIconPosition,
+                objectSize = informationIconSize,
+                composeDescription = {
+                    Column() {
+                        Text(
+                            text = "Information Icon",
+                            style = MaterialTheme.typography.h6,
+                            color = Color.White,
+                            fontWeight = FontWeight.W500
+                        )
+                        Text(
+                            text = "this icon is used to check information \nabout the application",
+                            style = MaterialTheme.typography.subtitle1,
+                            color = Color.White
+                        )
+                    }
+                },
+                composeDescriptionOffset = Offset(
+                    personIconPosition.x.plus(personIconIntSize.width.times(2)),
+                    personIconPosition.y.plus(personIconIntSize.height.times(2)),
+                )
+            ),
+            //CustomTextField
+            AnimationObject(
+                bigCircleRadius = 400.dp,
+                bigCircleColor = color4,
+                smallCircleRadius = 240.dp,
+                smallCircleColor = Color.White,
+                objectToShow = { Box(modifier = Modifier.padding(end = 32.dp)) { customTextField() } },
+                objectOffset = customTextFieldPosition,
+                objectSize = customTextFieldSize,
+                composeDescription = {
+
+                    Column(
+                        Modifier
+                            .padding(top = 250.dp, start = 50.dp),
+                        horizontalAlignment = Alignment.Start
+                    ) {
+                        Text(
+                            text = "Text field",
+                            style = MaterialTheme.typography.h6,
+                            color = Color.White,
+                            fontWeight = FontWeight.W500
+                        )
+                        Text(
+                            text = "It's a place to write a message to send",
+                            style = MaterialTheme.typography.subtitle1,
+                            color = Color.White
+                        )
+                    }
+                },
+            ),
+            //EmojiIcon
+            AnimationObject(
+                bigCircleRadius = 300.dp,
+                bigCircleColor = color4,
+                smallCircleRadius = 50.dp,
+                smallCircleColor = Color.White,
+                objectToShow = { IconEmoji(color = iconAnimationColor) },
+                objectOffset = emojiIconPosition,
+                objectSize = emojiIconSize,
+                composeDescription = {
+                    Column() {
+                        Text(
+                            text = "Emoji Icon",
+                            style = MaterialTheme.typography.h6,
+                            color = Color.White,
+                            fontWeight = FontWeight.W500
+                        )
+                        Text(
+                            text = "Button for inserting emoji icons into text",
+                            style = MaterialTheme.typography.subtitle1,
+                            color = Color.White
+                        )
+                    }
+                },
+                composeDescriptionOffset = Offset(
+                    emojiIconPosition.x.plus(personIconIntSize.width).minus(100),
+                    emojiIconPosition.y.minus(personIconIntSize.height.times(2)).minus(50),
+                )
+            ),
+            //EmailIcon
+            AnimationObject(
+                bigCircleRadius = 300.dp,
+                bigCircleColor = color4,
+                smallCircleRadius = 50.dp,
+                smallCircleColor = Color.White,
+                objectToShow = { EmailIcon(color = iconAnimationColor) },
+                objectOffset = emailIconPosition,
+                objectSize = emailIconSize,
+                composeDescription = {
+                    Column() {
+                        Text(
+                            text = "Email Icon",
+                            style = MaterialTheme.typography.h6,
+                            color = Color.White,
+                            fontWeight = FontWeight.W500
+                        )
+                        Text(
+                            text = "Button for linking text",
+                            style = MaterialTheme.typography.subtitle1,
+                            color = Color.White
+                        )
+                    }
+                },
+                composeDescriptionOffset = Offset(
+                    emailIconPosition.x.plus(personIconIntSize.width).minus(100),
+                    emailIconPosition.y.minus(personIconIntSize.height.times(2)).minus(50),
+                )
+            ),
+            //PhotoIcon
+            AnimationObject(
+                bigCircleRadius = 300.dp,
+                bigCircleColor = color4,
+                smallCircleRadius = 50.dp,
+                smallCircleColor = Color.White,
+                objectToShow = { PhotoIcon(color = iconAnimationColor) },
+                objectOffset = photoIconPosition,
+                objectSize = photoIconSize,
+                composeDescription = {
+                    Column() {
+                        Text(
+                            text = "Photo Icon",
+                            style = MaterialTheme.typography.h6,
+                            color = Color.White,
+                            fontWeight = FontWeight.W500
+                        )
+                        Text(
+                            text = "Button for inserting photos",
+                            style = MaterialTheme.typography.subtitle1,
+                            color = Color.White
+                        )
+                    }
+                },
+                composeDescriptionOffset = Offset(
+                    photoIconPosition.x.plus(personIconIntSize.width).minus(100),
+                    photoIconPosition.y.minus(personIconIntSize.height.times(2)).minus(50),
+                )
+            ),
+            //LocalizationIcon
+            AnimationObject(
+                bigCircleRadius = 300.dp,
+                bigCircleColor = color4,
+                smallCircleRadius = 50.dp,
+                smallCircleColor = Color.White,
+                objectToShow = { LocationIcon(color = iconAnimationColor) },
+                objectOffset = localizationIconPosition,
+                objectSize = localizationIconSize,
+                composeDescription = {
+                    Column() {
+                        Text(
+                            text = "Localization Icon",
+                            style = MaterialTheme.typography.h6,
+                            color = Color.White,
+                            fontWeight = FontWeight.W500
+                        )
+                        Text(
+                            text = "Button for sending your location",
+                            style = MaterialTheme.typography.subtitle1,
+                            color = Color.White
+                        )
+                    }
+                },
+                composeDescriptionOffset = Offset(
+                    photoIconPosition.x.plus(personIconIntSize.width).minus(90),
+                    photoIconPosition.y.minus(personIconIntSize.height.times(2)).minus(50),
+                )
             )
 
         )
@@ -135,7 +316,15 @@ fun ExampleView() {
                                 searchIconPosition = it.positionInRoot()
                             }
                     )
-                    InfoIcon()
+                    InfoIcon(
+                        modifier = Modifier
+                            .onSizeChanged {
+                                informationIconSize = it
+                            }
+                            .onGloballyPositioned {
+                                informationIconPosition = it.positionInRoot()
+                            }
+                    )
                 }
             }
             Box(modifier = Modifier.weight(1f)) {
@@ -146,16 +335,15 @@ fun ExampleView() {
                     .background(color = Color(0xFFB8C3FF))
                     .padding(horizontal = 16.dp)
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(vertical = 8.dp)
-                        .height(56.dp)
+                Box(modifier = Modifier
+                    .onSizeChanged {
+                        customTextFieldSize = it
+                    }
+                    .onGloballyPositioned {
+                        customTextFieldPosition = it.positionInRoot()
+                    }
                 ) {
-                    OutlinedTextField(
-                        modifier = Modifier.fillMaxWidth(),
-                        value = "",
-                        onValueChange = {}
-                    )
+                    customTextField()
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically
@@ -166,24 +354,40 @@ fun ExampleView() {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         IconEmoji(
-//                            modifier = Modifier.onGloballyPositioned {
-//                                personIconPosition = it.positionInWindow()
-//                            }
-                        )
-                        EmailIcon(
-                            modifier = Modifier.onGloballyPositioned {
-//                                personIconPosition = it.positionInWindow()
+                            modifier = Modifier
+                            .onSizeChanged {
+                                emojiIconSize = it
+                            }
+                            .onGloballyPositioned {
+                                emojiIconPosition = it.positionInRoot()
                             }
                         )
+                        EmailIcon(
+                            modifier = Modifier
+                                .onSizeChanged {
+                                    emailIconSize = it
+                                }
+                                .onGloballyPositioned {
+                                    emailIconPosition = it.positionInRoot()
+                                }
+                        )
                         PhotoIcon(
-//                            modifier = Modifier.onGloballyPositioned {
-//                                personIconPosition = it.positionInWindow()
-//                            }
+                            modifier = Modifier
+                                .onSizeChanged {
+                                    photoIconSize = it
+                                }
+                                .onGloballyPositioned {
+                                    photoIconPosition= it.positionInRoot()
+                                }
                         )
                         LocationIcon(
-//                            modifier = Modifier.onGloballyPositioned {
-//                                personIconPosition = it.positionInWindow()
-//                            }
+                            modifier = Modifier
+                                .onSizeChanged {
+                                    localizationIconSize = it
+                                }
+                                .onGloballyPositioned {
+                                    localizationIconPosition = it.positionInRoot()
+                                }
                         )
                     }
                     OutlinedButton(
@@ -209,6 +413,21 @@ fun ExampleView() {
                 bigCircleColorBeforeDisappearing = color1
             )
         }
+    }
+}
+
+@Composable
+fun customTextField() {
+    Column(
+        modifier = Modifier
+            .padding(vertical = 8.dp)
+            .height(56.dp)
+    ) {
+        OutlinedTextField(
+            modifier = Modifier.fillMaxWidth(),
+            value = "",
+            onValueChange = {}
+        )
     }
 }
 
