@@ -1,4 +1,4 @@
-package com.example.onboardingtooltipanimation
+package com.example.compose_animations_tooltips_library
 
 
 import android.annotation.SuppressLint
@@ -36,7 +36,7 @@ import kotlinx.coroutines.delay
  */
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun AnimtionTooltips(
+fun AnimationTooltips(
     modifier: Modifier = Modifier,
     tooltipsList: List<AnimationObject>,
     state: (Int) -> Unit,

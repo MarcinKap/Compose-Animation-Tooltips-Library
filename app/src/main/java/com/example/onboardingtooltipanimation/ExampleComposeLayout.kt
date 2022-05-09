@@ -15,6 +15,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import com.example.compose_animations_tooltips_library.AnimationObject
+import com.example.compose_animations_tooltips_library.AnimationTooltips
 
 
 @Composable
@@ -270,7 +272,7 @@ fun ExampleView() {
                             fontWeight = FontWeight.W500
                         )
                         Text(
-                            text = "Button for sending your location",
+                            text = "Button for sending your \nlocation",
                             style = MaterialTheme.typography.subtitle1,
                             color = Color.White
                         )
@@ -404,7 +406,7 @@ fun ExampleView() {
         var state by remember { mutableStateOf(0) }
 
         if (state > -4) {
-            AnimtionTooltips(
+            AnimationTooltips(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(0.3f)),

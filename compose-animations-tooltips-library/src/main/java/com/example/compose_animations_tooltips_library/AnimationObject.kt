@@ -1,4 +1,4 @@
-package com.example.onboardingtooltipanimation
+package com.example.compose_animations_tooltips_library
 
 
 import androidx.compose.runtime.Composable
