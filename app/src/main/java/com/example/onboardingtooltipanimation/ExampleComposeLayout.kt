@@ -404,7 +404,6 @@ fun ExampleView() {
         }
 
         var state by remember { mutableStateOf(0) }
-
         if (state > -4) {
             AnimationTooltips(
                 modifier = Modifier

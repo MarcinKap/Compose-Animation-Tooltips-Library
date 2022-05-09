@@ -61,3 +61,17 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter:5.8.0")
 
 }
+
+afterEvaluate {
+    publishing {
+        publications {
+            release(MavenPublication) {
+                from components.release
+
+                groupId = 'com.github.marcinkap'
+                artifactId = 'compose animation tooltips'
+                version = '1.0.0'
+            }
+        }
+    }
+}
