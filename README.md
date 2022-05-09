@@ -14,15 +14,15 @@ The function consists of 5 phases:
 
 Add the code below to your gradle files
 
-    repositories {
-        google()
-        mavenCentral()
-        maven { url 'https://jitpack.io' }
-       ...
-    }
+	repositories {
+		google()
+		mavenCentral()
+		maven { url 'https://jitpack.io' }
+		...
+	}
 
-    dependencies {
- 
+	dependencies {
+		implementation 'com.github.MarcinKap:Compose_Animation_Tooltips_Library:1.0.0'
 	}
 
 # Example of use
