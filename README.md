@@ -1,4 +1,4 @@
-Animation Tooltips Library - Jetpack Compose
+# Animation Tooltips Library - Jetpack Compose
 
  This function is used to easily create a series of animations describing subsequent functions in the application.
 The function consists of 5 phases:
