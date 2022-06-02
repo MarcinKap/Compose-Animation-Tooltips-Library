@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.example.compose_animations_tooltips_library.AnimationObject
+import com.example.compose_animations_tooltips_library.AnimationState
 import com.example.compose_animations_tooltips_library.AnimationTooltips
 
 
@@ -404,7 +405,7 @@ fun ExampleView() {
         }
 
         var state by remember { mutableStateOf(0) }
-        if (state > -4) {
+        if (state > AnimationState.FINISHED.value) {
             AnimationTooltips(
                 modifier = Modifier
                     .fillMaxSize()
