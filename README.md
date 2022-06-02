@@ -67,7 +67,7 @@ And obtaining their final sizes in the place where the displayed object was trig
 Every time the animation state changes, the application sets the state 'state' and its final value is -4. Therefore, I recommend that you use the following code to disable the animation:
 
 	var state by remember { mutableStateOf(0) }
-	if (state > -4) {
+	if (state > AnimationState.FINISHED.value) {
 	    AnimationTooltips(
 		modifier = Modifier
 		    .fillMaxSize()
