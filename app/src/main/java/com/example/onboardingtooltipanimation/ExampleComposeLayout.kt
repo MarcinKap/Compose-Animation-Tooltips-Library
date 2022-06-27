@@ -404,8 +404,8 @@ fun ExampleView() {
             }
         }
 
-        var state by remember { mutableStateOf(0) }
-        if (state > AnimationState.FINISHED.value) {
+        var state by remember { mutableStateOf(AnimationState.LOADING() as AnimationState) }
+        if (state < AnimationState.FINISHED) {
             AnimationTooltips(
                 modifier = Modifier
                     .fillMaxSize()
