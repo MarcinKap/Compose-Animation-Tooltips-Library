@@ -16,7 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import com.example.compose_animations_tooltips_library.AnimationObject
-import com.example.compose_animations_tooltips_library.AnimationState
+import com.example.compose_animations_tooltips_library.OnboardingTootltipsState
 import com.example.compose_animations_tooltips_library.AnimationTooltips
 
 
@@ -404,8 +404,8 @@ fun ExampleView() {
             }
         }
 
-        var state by remember { mutableStateOf(AnimationState.LOADING() as AnimationState) }
-        if (state < AnimationState.FINISHED) {
+        var state by remember { mutableStateOf(OnboardingTootltipsState.LOADING as OnboardingTootltipsState) }
+        if (state < OnboardingTootltipsState.FINISHED) {
             AnimationTooltips(
                 modifier = Modifier
                     .fillMaxSize()
