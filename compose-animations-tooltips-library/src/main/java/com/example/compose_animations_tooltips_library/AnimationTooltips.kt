@@ -23,7 +23,7 @@ import kotlinx.coroutines.delay
 /**
  * This function is used to easily create a series of animations describing subsequent functions in
  * the application.
- * The function consists of 5 phases:
+ * The function consists of 7 phases:
 - phase 0: No new objects on the screen (state: LOADING)
 - phase 1: The appearance of a large circle from the first object on the tooltipsList: List <AnimationObject> (state: SHOW_BIG_CIRCLE)
 - phase 2: during this phase, the animations included in the list start to appear, in order to
